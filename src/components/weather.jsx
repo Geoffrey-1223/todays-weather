@@ -244,10 +244,10 @@ const Weather = () => {
                     <div className='bd-highlight'>{weatherData.minTemp} <span className="high-temperature">°C</span></div>
                 </div>
                 <div className="d-flex flex-row justify-content-between weather-detail">
-                    <div class="bd-highlight">{weatherData.location}, {weatherData.countryCode || selectedCountryCode}</div>
-                    <div class="bd-highlight">{weatherData.time}</div>
-                    <div class="bd-highlight">Humidity: {weatherData.humidity}%</div>
-                    <div class="bd-highlight">{weatherData.mainWeather}</div>
+                    <div className="bd-highlight">{weatherData.location}, {weatherData.countryCode || selectedCountryCode}</div>
+                    <div className="bd-highlight">{weatherData.time}</div>
+                    <div className="bd-highlight">Humidity: {weatherData.humidity}%</div>
+                    <div className="bd-highlight">{weatherData.mainWeather}</div>
                 </div>
 
                 <div className='history-section'>
@@ -291,12 +291,12 @@ const Weather = () => {
                                 <div className='bd-highlight ml-3'>L: </div>
                                 <div className='bd-highlight'>{weatherData.minTemp} <span className="high-temperature">°C</span></div>
                             </div>
-                            <div class="bd-highlight">{weatherData.location}, {weatherData.countryCode || selectedCountryCode}</div>
+                            <div className="bd-highlight">{weatherData.location}, {weatherData.countryCode || selectedCountryCode}</div>
                         </div>
                         <div className='d-flex flex-column weather-mobile-detail'>
-                            <div class="bd-highlight ">{weatherData.mainWeather}</div>
-                            <div class="bd-highlight">Humidity: {weatherData.humidity}%</div>
-                            <div class="bd-highlight">{weatherData.time}</div>
+                            <div className="bd-highlight ">{weatherData.mainWeather}</div>
+                            <div className="bd-highlight">Humidity: {weatherData.humidity}%</div>
+                            <div className="bd-highlight">{weatherData.time}</div>
                         </div>
                     </div>
 
