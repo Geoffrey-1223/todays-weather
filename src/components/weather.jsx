@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState, useRef, useCallback } from 'react'
 import'./weather.css'
 import SearchIcon from '@mui/icons-material/Search';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -19,23 +19,6 @@ const Weather = () => {
     // const [isToggled, setIsToggled] = useState(false);
     const [isMobile, setIsMobile] = useState(false);
     // console.log("isMobile====>", isMobile)
-    const allIcons = {
-        "01d": clear_icon,
-        "01n": clear_icon,
-        "02d": cloud_icon,
-        "02n": cloud_icon,
-        "03d": cloud_icon,
-        "03n": cloud_icon,
-        "04d": drizzle_icon,
-        "04n": drizzle_icon,
-        "09d": rain_icon,
-        "09n": rain_icon,
-        "10d": rain_icon,
-        "10n": rain_icon,
-        "13d": snow_icon,
-        "13n": snow_icon,
-
-    }
 
     const saveToHistory = (values) => {
         // Function to format date and time
@@ -78,7 +61,7 @@ const Weather = () => {
         }); 
         localStorage.setItem("searchHistory", JSON.stringify(updatedHistory));
     
-        setNotification(`Removed ${values} from search history.`);
+        setNotification(`Successfully Removed ${values} from search history.`);
         setShowNotification(true);
     
         setTimeout(() => {
@@ -88,9 +71,32 @@ const Weather = () => {
     };
 
     const searchHistory = JSON.parse(localStorage.getItem("searchHistory")) || [];
-    const apiCalling = async (value) => {
-        if (value === "" && selectedCountry === "") {
-            alert("Please enter a valid city or country name");
+    const apiCalling = useCallback(async (value) => {
+        const allIcons = {
+            "01d": clear_icon,
+            "01n": clear_icon,
+            "02d": cloud_icon,
+            "02n": cloud_icon,
+            "03d": cloud_icon,
+            "03n": cloud_icon,
+            "04d": drizzle_icon,
+            "04n": drizzle_icon,
+            "09d": rain_icon,
+            "09n": rain_icon,
+            "10d": rain_icon,
+            "10n": rain_icon,
+            "13d": snow_icon,
+            "13n": snow_icon,
+    
+        }
+
+        if (value.city === "" && value.country === "" ) {
+            setNotification("Please enter a valid city or country name");
+            setShowNotification(true);
+            setTimeout(() => {
+                setShowNotification(false);
+                setTimeout(() => setNotification(''), 500); 
+            }, 3000);
             return;
         }
         try {
@@ -144,7 +150,7 @@ const Weather = () => {
         } catch (error) {
             console.error("Error fetching weather data:", error); // Log any errors
         }
-    };
+    }, []);
 
     useEffect(() => {
         const getCityFromIP = async () => {
@@ -153,12 +159,12 @@ const Weather = () => {
                 const data = await response.json();
                 if (data.status === 'success') {
                     const cityName = data.city; 
-                    apiCalling({city: cityName, code: data.countryCode, country: data.country}); 
+                    apiCalling({ city: cityName, code: data.countryCode, country: data.country }); 
                 } else {
                     // Fallback to a default city if IP geolocation fails
                     apiCalling("London");
                 }
-
+    
                 const countryResponse = await fetch('https://restcountries.com/v3.1/all');
                 const countryApiData = await countryResponse.json();
                 // Extract country names and codes
@@ -173,30 +179,23 @@ const Weather = () => {
                 apiCalling("London");
             }
         };
-
+    
         getCityFromIP();
-
-
+    
         const checkMobile = () => {
             setIsMobile(window.matchMedia("(max-width: 700px)").matches);
-          };
-      
-          // Check on initial render
-          checkMobile();
-      
-          // Add listener to handle window resize
-          window.addEventListener("resize", checkMobile);
-      
-          // Clean up listener on unmount
-          return () => window.removeEventListener("resize", checkMobile);
-    });
+        };
+    
+        // Check on initial render
+        checkMobile();
+    
+        // Add listener to handle window resize
+        window.addEventListener("resize", checkMobile);
+    
+        // Clean up listener on unmount
+        return () => window.removeEventListener("resize", checkMobile);
+    }, [apiCalling]); // Add apiCalling here
 
-    // const handleToggle = () => {
-    //     setIsToggled(!isToggled);
-    //     console.log("toggle!!!")
-    //     // Optionally, you can trigger theme change here
-    //     // document.body.classList.toggle('dark-theme', !isToggled);
-    //   };
   return (
     <div className='weather-container'>
         {/* <div className="theme-switch">
